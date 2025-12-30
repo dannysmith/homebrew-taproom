@@ -1,0 +1,55 @@
+name: Update tdn Formula
+
+on:
+  repository_dispatch:
+    types: [update-tdn-formula]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ github.event.client_payload.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download checksums and update formula
+        run: |
+          BASE_URL="https://github.com/taskdn/taskdn/releases/download/tdn-cli-v${VERSION}"
+
+          # Download checksums and export as env vars
+          for target in darwin-arm64 darwin-x64 linux-arm64 linux-x64; do
+            echo "Fetching ${target} checksum..."
+            HASH=$(curl -sL "${BASE_URL}/tdn-${target}.tar.gz.sha256" | cut -d' ' -f1)
+            # Export with underscores (bash doesn't like hyphens in var names)
+            VAR_NAME=$(echo "$target" | tr '-' '_')
+            export "$VAR_NAME=$HASH"
+            echo "  ${target}: ${HASH}"
+          done
+
+          # Update version
+          sed -i "s/version \".*\"/version \"${VERSION}\"/" Formula/tdn.rb
+
+          # Update checksums - use perl for multi-line regex (more reliable than sed)
+          # Each sha256 is updated based on its preceding url line
+          perl -i -0pe "s|(url.*tdn-darwin-arm64.*\n\s*)sha256 \"[^\"]*\"|\1sha256 \"$darwin_arm64\"|g" Formula/tdn.rb
+          perl -i -0pe "s|(url.*tdn-darwin-x64.*\n\s*)sha256 \"[^\"]*\"|\1sha256 \"$darwin_x64\"|g" Formula/tdn.rb
+          perl -i -0pe "s|(url.*tdn-linux-arm64.*\n\s*)sha256 \"[^\"]*\"|\1sha256 \"$linux_arm64\"|g" Formula/tdn.rb
+          perl -i -0pe "s|(url.*tdn-linux-x64.*\n\s*)sha256 \"[^\"]*\"|\1sha256 \"$linux_x64\"|g" Formula/tdn.rb
+
+          echo "Updated Formula/tdn.rb:"
+          cat Formula/tdn.rb
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          title: "Update tdn to v${{ env.VERSION }}"
+          commit-message: "Update tdn to v${{ env.VERSION }}"
+          branch: "update-v${{ env.VERSION }}"
+          body: |
+            Automated update triggered by new release.
+
+            **Version:** ${{ env.VERSION }}
