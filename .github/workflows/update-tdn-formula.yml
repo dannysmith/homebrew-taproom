@@ -18,7 +18,7 @@ jobs:
 
       - name: Download checksums and update formula
         run: |
-          BASE_URL="https://github.com/taskdn/taskdn/releases/download/tdn-cli-v${VERSION}"
+          BASE_URL="https://github.com/dannysmith/taskdn/releases/download/tdn-cli-v${VERSION}"
 
           # Download checksums and export as env vars
           for target in darwin-arm64 darwin-x64 linux-arm64 linux-x64; do
