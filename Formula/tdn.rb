@@ -1,28 +1,28 @@
 class Tdn < Formula
   desc "Task management CLI for humans and AI agents"
   homepage "https://github.com/dannysmith/taskdn"
-  version "1.0.1"
+  version "1.0.2"
   license "MIT"
 
   on_macos do
     on_arm do
       url "https://github.com/dannysmith/taskdn/releases/download/tdn-cli-v#{version}/tdn-darwin-arm64.tar.gz"
-      sha256 "12421f90767c2a5b6c325ba1937c7c8b5385abc432009dfce176514ec11ff74f"
+      sha256 "8a0fc518c30e4da9d8bd3d214e3e46d01a167ad407bb031759de70ddebd17680"
     end
     on_intel do
       url "https://github.com/dannysmith/taskdn/releases/download/tdn-cli-v#{version}/tdn-darwin-x64.tar.gz"
-      sha256 "de3f70acaf74908d27e5e6d1f909c42f29aa502c3bfbc452ff27235d3a163e36"
+      sha256 "01bdc808e623eb56cb10167b5a03a1236f89ec1fade017c6e3049c117c4dd71b"
     end
   end
 
   on_linux do
     on_arm do
       url "https://github.com/dannysmith/taskdn/releases/download/tdn-cli-v#{version}/tdn-linux-arm64.tar.gz"
-      sha256 "489d9aa908eebbd7adf0c04f95de6bb360ac88a6e6a7419052586a51d319492e"
+      sha256 "1236ffbf144266cead8f8f5904c431fbbbe9484522f5eeb01f5800394e0634c2"
     end
     on_intel do
       url "https://github.com/dannysmith/taskdn/releases/download/tdn-cli-v#{version}/tdn-linux-x64.tar.gz"
-      sha256 "6bf0796137a0be8e39c14954848c5e35f1f9538e31af3644ab7b3ca13d651299"
+      sha256 "7e567eb39fd62cbb6c648360df63139793552e364f5e8503e8b8518e5d0ec024"
     end
   end
 
